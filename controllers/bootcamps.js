@@ -11,6 +11,7 @@ exports.getBootcamps = async (req, res, next) => {
             success: true,
             message: "Bootcamps fetched successfully",
             data: bootcamps,
+            count: bootcamps.length,
         });
     } catch (error) {
         res.status(400).json({ success: false, message: error.message });
