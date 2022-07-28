@@ -13,7 +13,7 @@ exports.getBootcamps = async (req, res, next) => {
             data: bootcamps,
         });
     } catch (error) {
-        res.status(400).json({ success: false, message: "Error. Try Again" });
+        res.status(400).json({ success: false, message: error.message });
     }
 };
 
@@ -21,11 +21,21 @@ exports.getBootcamps = async (req, res, next) => {
 //*  @ Route       Get /api/v1/bootcamps/:id
 //*  @ Access      Public
 
-exports.getBootcamp = (req, res, next) => {
-    res.json({
-        success: true,
-        message: `Show single bootcamp with id ${req.params.id}`,
-    });
+exports.getBootcamp = async (req, res, next) => {
+    try {
+        const bootcamp = await Bootcamp.findById(req.params.id);
+        if (!bootcamp)
+            return res
+                .status(400)
+                .json({ success: false, message: "Error. Try Again" });
+        res.status(200).json({
+            success: true,
+            message: "Bootcamp fetched Successfully",
+            data: bootcamp,
+        });
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
 };
 
 //*  @ Description Create New Bootcamp
