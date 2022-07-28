@@ -4,8 +4,17 @@ const Bootcamp = require("../models/Bootcamp");
 //*  @ Route       Get /api/v1/bootcamps
 //*  @ Access      Public
 
-exports.getBootcamps = (req, res, next) => {
-    res.json({ success: true, message: "Show all bootcamps" });
+exports.getBootcamps = async (req, res, next) => {
+    try {
+        const bootcamps = await Bootcamp.find();
+        res.status(200).json({
+            success: true,
+            message: "Bootcamps fetched successfully",
+            data: bootcamps,
+        });
+    } catch (error) {
+        res.status(400).json({ success: false, message: "Error. Try Again" });
+    }
 };
 
 //*  @ Description Get Single Bootcamp
