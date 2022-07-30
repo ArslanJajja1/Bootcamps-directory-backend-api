@@ -1,7 +1,7 @@
 const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
 const Course = require("../models/Course");
-
+const Bootcamp = require("../models/Bootcamp");
 //*  @ Description Get Courses
 //*  @ Route       Get /api/v1/courses
 //*  @ Route       Get /api/v1/bootcamps/:bootcampId/courses
@@ -34,6 +34,24 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
     if (!course) {
         return next(new ErrorResponse(`No course with id of ${req.params.id}`));
     }
+    res.status(200).json({
+        success: true,
+        data: course,
+    });
+});
+
+//*  @ Description Add Course
+//*  @ Route       Get /api/v1/bootcamps/:bootcampId/courses
+//*  @ Access      Private
+exports.addCourse = asyncHandler(async (req, res, next) => {
+    req.body.bootcamp = req.params.bootcampId;
+    const bootcamp = await Bootcamp.findById(req.params.bootcampId);
+    if (!bootcamp) {
+        return next(
+            new ErrorResponse(`No bootcamp with id of ${req.params.bootcampId}`)
+        );
+    }
+    const course = await Course.create(req.body);
     res.status(200).json({
         success: true,
         data: course,
