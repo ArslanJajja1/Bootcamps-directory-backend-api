@@ -1,7 +1,9 @@
+const path = require("path");
 const Bootcamp = require("../models/Bootcamp");
 const ErrorResponse = require("../utils/errorResponse");
 const asyncHandler = require("../middleware/async");
 const geocoder = require("../utils/geocoder");
+const errorHandler = require("../middleware/error");
 //*  @ Description Get All Bootcamps
 //*  @ Route       Get /api/v1/bootcamps
 //*  @ Access      Public
@@ -170,5 +172,49 @@ exports.getBootcampsInRadius = asyncHandler(async (req, res, next) => {
         message: "Bootcamps fetched successfully",
         count: bootcamps.length,
         data: bootcamps,
+    });
+});
+
+//*  @ Description Upload photo for  bootcamp
+//*  @ Route       PUT /api/v1/bootcamps/:id/photo
+//*  @ Access      Private
+
+exports.bootcampPhotoUpload = asyncHandler(async (req, res, next) => {
+    const bootcamp = await Bootcamp.findById(req.params.id);
+    // console.log(req);
+    if (!bootcamp)
+        return next(
+            new ErrorResponse(
+                `Bootcamp doesn't found with id ${req.params.id}`,
+                404
+            )
+        );
+    if (!req.files) {
+        return next(new ErrorResponse(`Please upload file`, 400));
+    }
+    const file = req.files.file;
+    console.log(file);
+    // Make sure file is photo
+    if (!file.mimetype.startsWith("image")) {
+        return next(new ErrorResponse(`Please upload an image file`, 400));
+    }
+    // Check file size
+    if (file.size > process.env.MAX_FILE_UPLOAD) {
+        return next(
+            new errorHandler(
+                `Please upload an image less than ${process.env.MAX_FILE_UPLOAD}`,
+                400
+            )
+        );
+    }
+    // Create custom filename
+    file.name = `photo_${bootcamp._id}${path.parse(file.name).ext}`;
+    file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async (err) => {
+        if (err) {
+            console.error(err);
+            return next(new errorHandler(`Problem with file upload`, 500));
+        }
+        await Bootcamp.findByIdAndUpdate(req.params.id, { photo: file.name });
+        res.status(200).json({ success: true, data: file.name });
     });
 });
