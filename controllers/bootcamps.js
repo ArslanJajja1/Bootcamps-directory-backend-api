@@ -63,12 +63,7 @@ exports.createBootcamp = asyncHandler(async (req, res, next) => {
 //*  @ Access      Private
 
 exports.updateBootcamp = asyncHandler(async (req, res, next) => {
-    const updatedBootcampData = req.body;
-    const bootcamp = await Bootcamp.findByIdAndUpdate(
-        req.params.id,
-        updatedBootcampData,
-        { new: true, runValidators: true }
-    );
+    let bootcamp = await Bootcamp.findById(req.params.id);
     if (!bootcamp)
         return next(
             new ErrorResponse(
@@ -76,6 +71,22 @@ exports.updateBootcamp = asyncHandler(async (req, res, next) => {
                 404
             )
         );
+    // Make sure user is bootcamp owner
+    if (
+        bootcamp.user.toString() !== req.user._id &&
+        req.user.role !== "admin"
+    ) {
+        return next(
+            new ErrorResponse(
+                `User ${req.user._id} is not authorized to update this bootcamp`,
+                401
+            )
+        );
+    }
+    bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true,
+    });
     res.status(200).json({
         success: true,
         message: "Bootcamp updated Successfully",
@@ -96,6 +107,18 @@ exports.deleteBootcamp = asyncHandler(async (req, res, next) => {
                 404
             )
         );
+    // Make sure user is bootcamp owner
+    if (
+        bootcamp.user.toString() !== req.user._id &&
+        req.user.role !== "admin"
+    ) {
+        return next(
+            new ErrorResponse(
+                `User ${req.user._id} is not authorized to delete this bootcamp`,
+                401
+            )
+        );
+    }
     bootcamp.remove();
     res.status(200).json({
         success: true,
@@ -144,11 +167,22 @@ exports.bootcampPhotoUpload = asyncHandler(async (req, res, next) => {
                 404
             )
         );
+    // Make sure user is bootcamp owner
+    if (
+        bootcamp.user.toString() !== req.user._id &&
+        req.user.role !== "admin"
+    ) {
+        return next(
+            new ErrorResponse(
+                `User ${req.user._id} is not authorized to update this bootcamp`,
+                401
+            )
+        );
+    }
     if (!req.files) {
         return next(new ErrorResponse(`Please upload file`, 400));
     }
     const file = req.files.file;
-    console.log(file);
     // Make sure file is photo
     if (!file.mimetype.startsWith("image")) {
         return next(new ErrorResponse(`Please upload an image file`, 400));
