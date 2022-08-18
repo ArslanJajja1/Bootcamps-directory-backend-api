@@ -36,6 +36,28 @@ exports.login = asyncHandler(async (req, res, next) => {
     sendTokenResponse(user, 200, res);
 });
 
+//*  @ Description Get Logged in User
+//*  @ Route       POST /api/v1/auth/me
+//*  @ Access      Private
+exports.getMe = asyncHandler(async (req, res, next) => {
+    const user = await User.findById(req.user._id);
+    res.status(200).json({ success: true, data: user });
+});
+
+//*  @ Description Forgot Password
+//*  @ Route       POST /api/v1/auth/forgotpassword
+//*  @ Access      Public
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+        return next(new ErrorResponse("This user does not exist", 404));
+    }
+    //Get reset password token
+    const resetToken = user.getResetPasswordToken();
+    await user.save({ validateBeforeSave: false });
+    res.status(200).json({ success: true, data: user });
+});
+
 //* Get Token from model,create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
     const token = user.getSignedJwtToken();
@@ -52,11 +74,3 @@ const sendTokenResponse = (user, statusCode, res) => {
         .cookie("token", token, options)
         .json({ success: true, token });
 };
-
-//*  @ Description Get Logged in User
-//*  @ Route       POST /api/v1/auth/me
-//*  @ Access      Private
-exports.getMe = asyncHandler(async (req, res, next) => {
-    const user = await User.findById(req.user._id);
-    res.status(200).json({ success: true, data: user });
-});
