@@ -44,10 +44,23 @@ exports.getCourse = asyncHandler(async (req, res, next) => {
 //*  @ Access      Private
 exports.addCourse = asyncHandler(async (req, res, next) => {
     req.body.bootcamp = req.params.bootcampId;
+    req.body.user = req.user._id;
     const bootcamp = await Bootcamp.findById(req.params.bootcampId);
     if (!bootcamp) {
         return next(
             new ErrorResponse(`No bootcamp with id of ${req.params.bootcampId}`)
+        );
+    }
+    // Make sure user is bootcamp owner
+    if (
+        bootcamp.user.toString() !== req.user._id &&
+        req.user.role !== "admin"
+    ) {
+        return next(
+            new ErrorResponse(
+                `User ${req.user._id} is not authorized to add course to bootcamp ${bootcamp._id}`,
+                401
+            )
         );
     }
     const course = await Course.create(req.body);
@@ -64,6 +77,15 @@ exports.updateCourse = asyncHandler(async (req, res, next) => {
     let course = await Course.findById(req.params.id);
     if (!course) {
         return next(new ErrorResponse(`No course with id of ${req.params.id}`));
+    }
+    // Make sure user is bootcamp owner
+    if (course.user.toString() !== req.user._id && req.user.role !== "admin") {
+        return next(
+            new ErrorResponse(
+                `User ${req.user._id} is not authorized to update course with id ${course._id}`,
+                401
+            )
+        );
     }
     course = await Course.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
@@ -82,6 +104,15 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
     const course = await Course.findById(req.params.id);
     if (!course) {
         return next(new ErrorResponse(`No course with id of ${req.params.id}`));
+    }
+    // Make sure user is bootcamp owner
+    if (course.user.toString() !== req.user._id && req.user.role !== "admin") {
+        return next(
+            new ErrorResponse(
+                `User ${req.user._id} is not authorized to delete course with id ${course._id}`,
+                401
+            )
+        );
     }
     await course.remove();
     res.status(200).json({
