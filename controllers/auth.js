@@ -38,6 +38,21 @@ exports.login = asyncHandler(async (req, res, next) => {
     sendTokenResponse(user, 200, res);
 });
 
+//*  @ Description Update user details
+//*  @ Route       PUT /api/v1/auth/updatedetails
+//*  @ Access      Private
+exports.updateDetails = asyncHandler(async (req, res, next) => {
+    const fieldsToUpdate = {
+        name: req.body.name,
+        email: req.body.email,
+    };
+    const user = await User.findById(req.user._id, fieldsToUpdate, {
+        new: true,
+        runValidators: true,
+    });
+    res.status(200).json({ success: true, data: user });
+});
+
 //*  @ Description Get Logged in User
 //*  @ Route       POST /api/v1/auth/me
 //*  @ Access      Private
