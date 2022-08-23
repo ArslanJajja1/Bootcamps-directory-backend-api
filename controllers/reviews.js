@@ -3,8 +3,8 @@ const asyncHandler = require("../middleware/async");
 const Review = require("../models/Reviews");
 const Bootcamp = require("../models/Bootcamp");
 //*  @ Description Get Reviews
-//*  @ Route       Get /api/v1/reviews
-//*  @ Route       Get /api/v1/bootcamps/:bootcampId/reviews
+//*  @ Route       GET /api/v1/reviews
+//*  @ Route       GET /api/v1/bootcamps/:bootcampId/reviews
 //*  @ Access      Public
 exports.getReviews = asyncHandler(async (req, res, next) => {
     if (req.params.bootcampId) {
@@ -17,7 +17,7 @@ exports.getReviews = asyncHandler(async (req, res, next) => {
     }
 });
 //*  @ Description Get Single Review
-//*  @ Route       Get /api/v1/reviews/:id
+//*  @ Route       GET /api/v1/reviews/:id
 //*  @ Access      Public
 exports.getReview = asyncHandler(async (req, res, next) => {
     const review = await Review.findById(req.params.id).populate({
@@ -30,4 +30,22 @@ exports.getReview = asyncHandler(async (req, res, next) => {
         );
     }
     res.status(200).json({ success: true, data: review });
+});
+//*  @ Description Add Review for bootcamp
+//*  @ Route       POST /api/v1/bootcamps/:bootcampId/reviews
+//*  @ Access      Private
+exports.addReview = asyncHandler(async (req, res, next) => {
+    req.body.bootcamp = req.params.bootcampId;
+    req.body.user = req.user.id;
+    const bootcamp = await Bootcamp.findById(req.params.bootcampId);
+    if (!bootcamp) {
+        return next(
+            new ErrorResponse(
+                `No bootcamp with id of ${req.params.bootcampId}`,
+                404
+            )
+        );
+    }
+    const review = await Review.create(req.body);
+    res.status(201).json({ success: true, data: review });
 });
