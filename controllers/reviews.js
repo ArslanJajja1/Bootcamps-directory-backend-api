@@ -72,3 +72,19 @@ exports.updateReview = asyncHandler(async (req, res, next) => {
     );
     res.status(200).json({ success: true, data: updatedReview });
 });
+//*  @ Description Delete Review for bootcamp
+//*  @ Route       DELETE /api/v1/reviews/:id
+//*  @ Access      Private
+exports.deleteReview = asyncHandler(async (req, res, next) => {
+    const review = await Review.findById(req.params.id);
+    if (!review) {
+        return next(
+            new ErrorResponse(`No review with id of ${req.params.id}`, 404)
+        );
+    }
+    if (review.user.toString() !== req.user.id && req.user.role !== "admin") {
+        return next(new ErrorResponse(`Not authorized to delete review`, 401));
+    }
+    await review.remove();
+    res.status(200).json({ success: true, data: {} });
+});
