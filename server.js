@@ -1,7 +1,6 @@
 const express = require("express");
 const path = require("path");
 const dotenv = require("dotenv");
-const morgan = require("morgan");
 const fileUpload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
 const mongoSanitize = require("express-mongo-sanitize");
@@ -28,10 +27,6 @@ const app = express();
 app.use(express.json());
 // cookie parser
 app.use(cookieParser());
-// Development logging middleware
-if (process.env.NODE_ENV === "development") {
-    app.use(morgan("dev"));
-}
 // File uploading
 app.use(fileUpload());
 // Santize data
