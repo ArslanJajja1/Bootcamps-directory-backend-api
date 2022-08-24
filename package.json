@@ -8,7 +8,8 @@
     "dev": "nodemon server"
   },
   "engines": {
-    "node": "18.x"
+    "node": "18.x",
+    "npm":"8.x"
 },
   "keywords": [],
   "author": "Arslan Jajja",
