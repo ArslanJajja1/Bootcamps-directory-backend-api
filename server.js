@@ -32,9 +32,13 @@ app.use(fileUpload());
 // Santize data
 app.use(mongoSanitize());
 // set security headers
-app.use(helmet());
+app.use(
+    helmet({
+        contentSecurityPolicy: false,
+    })
+);
 // prevent xss attacks
-// app.use(xss());
+app.use(xss());
 // rate limiting
 const limiter = rateLimit({
     windowMs: 10 * 60 * 1000,
