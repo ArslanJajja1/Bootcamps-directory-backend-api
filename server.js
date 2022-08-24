@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const fileUpload = require("express-fileupload");
 const cookieParser = require("cookie-parser");
 const mongoSanitize = require("express-mongo-sanitize");
+const helmet = require("helmet");
 const errorHandler = require("./middleware/error");
 const connectDB = require("./config/db");
 dotenv.config({ path: "./config/config.env" });
@@ -31,6 +32,8 @@ if (process.env.NODE_ENV === "development") {
 app.use(fileUpload());
 // Santize data
 app.use(mongoSanitize());
+// set security headers
+app.use(helmet());
 // Set static folder
 app.use(express.static(path.join(__dirname, "public")));
 // Routes
