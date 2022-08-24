@@ -1,7 +1,7 @@
 {
   "name": "bootcamps-directory-api",
   "version": "1.0.0",
-  "description": "Bootcamps directory backend api",
+  "description": "Bootcamps directory backend api which manages bootcamps,courses,reviews,users and authentication",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
