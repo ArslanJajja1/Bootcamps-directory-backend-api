@@ -34,7 +34,7 @@ app.use(mongoSanitize());
 // set security headers
 app.use(helmet());
 // prevent xss attacks
-app.use(xss());
+// app.use(xss());
 // rate limiting
 const limiter = rateLimit({
     windowMs: 10 * 60 * 1000,
