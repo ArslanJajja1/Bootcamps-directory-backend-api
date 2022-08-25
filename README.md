@@ -151,3 +151,4 @@ https://bootcamps-directory-api.herokuapp.com/
 -   Used Postman to create documentation
 -   Used docgen package to create HTML files from Postman
 -   Added html file as the / route for the api index page for documentation
+-   [@ArslanJajja](https://www.github.com/arslanjajja1)
