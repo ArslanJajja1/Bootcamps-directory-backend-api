@@ -8,6 +8,9 @@ Postman deployed link 👇🏻
 
 https://documenter.getpostman.com/view/14040172/VUquNGDU
 
+![postman api Image](/public/images/postman.png)
+
+
 Documentation/api deployed heroku link 👇🏻
 
 https://bootcamps-directory-api.herokuapp.com/
