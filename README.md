@@ -4,7 +4,7 @@ I have created the bootcamps-directory-backend-api.
 
 ## Deployed links :
 
-Postman deployed link 👇🏻
+## Postman deployed link 👇🏻
 
 https://documenter.getpostman.com/view/14040172/VUquNGDU
 
@@ -14,9 +14,9 @@ https://documenter.getpostman.com/view/14040172/VUquNGDU
 
 
 
-Documentation/api deployed heroku link 👇🏻
+## Documentation/api deployed heroku link 👇🏻
 
-https://bootcamps-directory-api.herokuapp.com/
+https://bootcamps-directory-web-api-70edc697e0cb.herokuapp.com/
 
 ![api documentation Image](/public/images/api.png)
 
