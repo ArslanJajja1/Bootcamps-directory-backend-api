@@ -12,7 +12,7 @@ Documentation/api deployed heroku link 👇🏻
 
 https://bootcamps-directory-api.herokuapp.com/
 
-[!Bootcamps-directory-api][/public/images/api.png]
+![api documentation Image](/public/images/api.png)
 
 ## Bootcamps
 
