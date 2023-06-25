@@ -8,7 +8,10 @@ Postman deployed link 👇🏻
 
 https://documenter.getpostman.com/view/14040172/VUquNGDU
 
-![postman api Image](/public/images/postman.png)
+![postman api Image](/public/images/postman1.png)
+
+![postman api Image](/public/images/postman2.png)
+
 
 
 Documentation/api deployed heroku link 👇🏻
